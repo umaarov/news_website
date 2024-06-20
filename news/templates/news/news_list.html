@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News Website</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'news/styles.css' %}"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">News Website</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin:index' %}" target="_blank"
+                >Admin Panel</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1 class="text-center my-4">Latest News</h1>
+      <form method="get" class="mb-4">
+        <div class="form-row align-items-center justify-content-center">
+          <div class="col-auto">
+            <select name="category" class="custom-select mr-sm-2">
+              <option value="">All Categories</option>
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filter</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row">
+        {% for article in articles %}
+        <div class="col-md-6 mb-4">
+          <div class="card h-100 shadow-sm">
+            {% if article.photo %}
+            <img
+              src="{{ article.photo.url }}"
+              class="card-img-top"
+              alt="{{ article.title }}"
+            />
+            {% else %}
+            <img
+              src="{% static 'news/default_news_image.jpg' %}"
+              class="card-img-top"
+              alt="Default Image"
+            />
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ article.title }}</h5>
+              <p class="card-text">{{ article.body|truncatechars:150 }}</p>
+            </div>
+            <div class="card-footer bg-light">
+              <small class="text-muted">Published on {{ article.date }}</small>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col">
+          <p class="text-muted">No news articles available.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
